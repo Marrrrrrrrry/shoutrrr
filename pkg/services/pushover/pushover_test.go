@@ -7,10 +7,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/containrrr/shoutrrr/internal/testutils"
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/services/pushover"
 	"github.com/jarcoal/httpmock"
+	"github.com/marrrrrrrrry/shoutrrr/internal/testutils"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/pushover"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"

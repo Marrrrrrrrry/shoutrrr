@@ -14,42 +14,48 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   go-versions:
     name: Lookup go versions
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       matrix: ${{ steps.versions.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: arnested/go-version-action@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: arnested/go-version-action@697236828ba755d1949ca46316abf0b4d9f6a205 # v2.1.6
         id: versions
   build:
     name: Build Shoutrrr
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: go-versions
     strategy:
       matrix:
         version: ${{ fromJSON(needs.go-versions.outputs.matrix) }}
     steps:
       - name: Set up Go ${{ matrix.version }}
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         id: go
         with:
           go-version: ${{ matrix.version }}
           check-latest: true
 
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build
         run: CGO_ENABLED=0 go build -v .
 
-      - name: Set up Docker
-        uses: docker/setup-docker-action@v4
+      - name: Vet
+        run: go vet ./...
 
-      - name: Verify Docker
-        run: docker version
+      - name: Set up Docker
+        uses: docker/setup-docker-action@77e84dbf09b47d1e29270283c22f16145aa85ca1 # v5.4.0
 
       - name: Test
         run: CGO_ENABLED=0 go test -v -coverprofile=coverage.out -covermode=atomic ./...
@@ -58,6 +64,6 @@ jobs:
         run: CGO_ENABLED=0 SHOUTRRR_MATRIX_CONDUIT_E2E=1 go test -tags conduit_e2e -v ./pkg/services/matrix -run TestConduitE2E
 
       - name: Publish coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

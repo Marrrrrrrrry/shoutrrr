@@ -3,9 +3,9 @@ package pushbullet_test
 import (
 	"errors"
 
-	"github.com/containrrr/shoutrrr/internal/testutils"
-	. "github.com/containrrr/shoutrrr/pkg/services/pushbullet"
 	"github.com/jarcoal/httpmock"
+	"github.com/marrrrrrrrry/shoutrrr/internal/testutils"
+	. "github.com/marrrrrrrrry/shoutrrr/pkg/services/pushbullet"
 
 	"net/url"
 	"os"

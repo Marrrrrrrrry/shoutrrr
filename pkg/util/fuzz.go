@@ -2,7 +2,7 @@ package util
 
 import (
 	fuzz "github.com/AdaLogics/go-fuzz-headers"
-	t "github.com/containrrr/shoutrrr/pkg/types"
+	t "github.com/marrrrrrrrry/shoutrrr/pkg/types"
 )
 
 func FuzzPartitionMessage(data []byte) int {

@@ -2,9 +2,9 @@ package generic
 
 import (
 	"encoding/json"
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 
 	"bytes"
 	"fmt"

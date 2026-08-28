@@ -2,16 +2,17 @@ on:
   release:
     types:
       - created
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-      - '**/v[0-9]+.[0-9]+.[0-9]+'
 
 permissions: {}
 
 jobs:
   build:
     name: Renew documentation
+    # The release event does not support the tags filter (it is push-only), so a
+    # job-level condition is used instead to restrict runs to "v"-prefixed versions.
+    if: startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
     - name: Pull new module version
-      uses: andrewslotin/go-proxy-pull-action@master
+      uses: andrewslotin/go-proxy-pull-action@00af8a5a49c844d6dde0bbbc116b72d8fd7ae97c # v1.5.0

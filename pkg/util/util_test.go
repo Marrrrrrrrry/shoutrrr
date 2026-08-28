@@ -8,8 +8,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/containrrr/shoutrrr/internal/meta"
-	. "github.com/containrrr/shoutrrr/pkg/util"
+	"github.com/marrrrrrrrry/shoutrrr/internal/meta"
+	. "github.com/marrrrrrrrry/shoutrrr/pkg/util"
 )
 
 func TestUtil(t *testing.T) {
@@ -88,7 +88,7 @@ var _ = Describe("the util package", func() {
 
 	When("calling function DocsURL", func() {
 		It("should return the expected URL", func() {
-			expectedBase := fmt.Sprintf(`https://containrrr.dev/shoutrrr/%s/`, meta.DocsVersion)
+			expectedBase := fmt.Sprintf(`https://marrrrrrrrry.github.io/shoutrrr-docs/%s/`, meta.DocsVersion)
 			Expect(DocsURL(``)).To(Equal(expectedBase))
 			Expect(DocsURL(`services/logger`)).To(Equal(expectedBase + `services/logger`))
 		})

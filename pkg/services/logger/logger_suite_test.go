@@ -1,9 +1,9 @@
 package logger_test
 
 import (
-	"github.com/containrrr/shoutrrr/internal/testutils"
-	unit "github.com/containrrr/shoutrrr/pkg/services/logger"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/internal/testutils"
+	unit "github.com/marrrrrrrrry/shoutrrr/pkg/services/logger"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 
 	"github.com/onsi/gomega/gbytes"
 

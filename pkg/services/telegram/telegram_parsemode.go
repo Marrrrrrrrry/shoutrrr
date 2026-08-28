@@ -1,8 +1,8 @@
 package telegram
 
 import (
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 )
 
 type parseMode int

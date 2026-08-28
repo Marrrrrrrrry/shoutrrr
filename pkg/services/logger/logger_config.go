@@ -3,7 +3,7 @@ package logger
 import (
 	"net/url"
 
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
 )
 
 // Config is the configuration object for the Logger Service

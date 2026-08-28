@@ -2,11 +2,11 @@ package zulip_test
 
 import (
 	"errors"
-	"github.com/containrrr/shoutrrr/internal/testutils"
-	"github.com/containrrr/shoutrrr/pkg/services/zulip"
-	. "github.com/containrrr/shoutrrr/pkg/services/zulip"
-	"github.com/containrrr/shoutrrr/pkg/types"
 	"github.com/jarcoal/httpmock"
+	"github.com/marrrrrrrrry/shoutrrr/internal/testutils"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/zulip"
+	. "github.com/marrrrrrrrry/shoutrrr/pkg/services/zulip"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 	"io"
 	"net/http"
 

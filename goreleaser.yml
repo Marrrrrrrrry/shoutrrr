@@ -1,62 +1,65 @@
-build:
-  dir: .
-  main: ./shoutrrr
-  binary: shoutrrr
-  goos:
-    - linux
-    - windows
-  goarch:
-    - amd64
-    - 386
-    - arm
-    - arm64
+version: 2
+
+builds:
+  - main: ./shoutrrr
+    binary: shoutrrr
+    goos:
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - '386'
+      - arm
+      - arm64
+
 archives:
-  - name_template: '{{.ProjectName}}_{{.Os}}_{{.Arch}}'
-    format: tar.gz
-    replacements:
-      arm: armhf
-      arm64: arm64v8
-      amd64: amd64
-      386: 386
-      darwin: macOS
-      linux: linux
+  - name_template: >-
+      {{ .ProjectName }}_{{ .Os }}_{{
+        if eq .Arch "arm" }}armhf{{
+      else if eq .Arch "arm64" }}arm64v8{{
+      else }}{{ .Arch }}{{ end }}
+    formats: [tar.gz]
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
+
 dockers:
   - goos: linux
     goarch: amd64
-    goarm: ''
     dockerfile: Dockerfile
     image_templates:
-      - containrrr/shoutrrr:amd64-{{ .Version }}
-      - containrrr/shoutrrr:amd64-latest
-    binaries:
-      - shoutrrr
+      - 'marrrrrrrrry/shoutrrr:amd64-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:amd64-latest'
   - goos: linux
-    goarch: 386
-    goarm: ''
+    goarch: '386'
     dockerfile: Dockerfile
     image_templates:
-      - containrrr/shoutrrr:i386-{{ .Version }}
-      - containrrr/shoutrrr:i386-latest
-    binaries:
-      - shoutrrr
+      - 'marrrrrrrrry/shoutrrr:i386-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:i386-latest'
   - goos: linux
     goarch: arm
-    goarm: 6
+    goarm: '6'
     dockerfile: Dockerfile
     image_templates:
-      - containrrr/shoutrrr:armhf-{{ .Version }}
-      - containrrr/shoutrrr:armhf-latest
-    binaries:
-      - shoutrrr
+      - 'marrrrrrrrry/shoutrrr:armhf-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:armhf-latest'
   - goos: linux
     goarch: arm64
-    goarm: ''
     dockerfile: Dockerfile
     image_templates:
-      - containrrr/shoutrrr:arm64v8-{{ .Version }}
-      - containrrr/shoutrrr:arm64v8-latest
-    binaries:
-      - shoutrrr
+      - 'marrrrrrrrry/shoutrrr:arm64v8-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:arm64v8-latest'
+
+docker_manifests:
+  - name_template: 'marrrrrrrrry/shoutrrr:{{ .Version }}'
+    image_templates:
+      - 'marrrrrrrrry/shoutrrr:amd64-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:i386-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:armhf-{{ .Version }}'
+      - 'marrrrrrrrry/shoutrrr:arm64v8-{{ .Version }}'
+  - name_template: 'marrrrrrrrry/shoutrrr:latest'
+    image_templates:
+      - 'marrrrrrrrry/shoutrrr:amd64-latest'
+      - 'marrrrrrrrry/shoutrrr:i386-latest'
+      - 'marrrrrrrrry/shoutrrr:armhf-latest'
+      - 'marrrrrrrrry/shoutrrr:arm64v8-latest'

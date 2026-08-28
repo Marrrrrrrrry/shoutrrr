@@ -9,11 +9,12 @@ import (
 	"net/smtp"
 	"net/url"
 	"os"
+	"strconv"
 	"time"
 
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 )
 
 // Service sends notifications to a given e-mail addresses via SMTP
@@ -84,7 +85,7 @@ func getClientConnection(config *Config) (*smtp.Client, error) {
 	var conn net.Conn
 	var err error
 
-	addr := fmt.Sprintf("%s:%d", config.Host, config.Port)
+	addr := net.JoinHostPort(config.Host, strconv.Itoa(int(config.Port)))
 
 	if useImplicitTLS(config.Encryption, config.Port) {
 		conn, err = tls.Dial("tcp", addr, &tls.Config{

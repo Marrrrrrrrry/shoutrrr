@@ -9,11 +9,11 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/containrrr/shoutrrr/internal/failures"
-	"github.com/containrrr/shoutrrr/internal/testutils"
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/internal/failures"
+	"github.com/marrrrrrrrry/shoutrrr/internal/testutils"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 
 	gt "github.com/onsi/gomega/types"
 
@@ -572,7 +572,7 @@ func fakeTLSEnabled(client *smtp.Client, hostname string) {
 	cr.SetString(hostname)
 }
 
-// matchFailure is a simple wrapper around `fail` and `gomega.MatchError`` to make it easier to use in tests
+// matchFailure is a simple wrapper around `fail` and `gomega.MatchError` to make it easier to use in tests
 func matchFailure(id failures.FailureID) gt.GomegaMatcher {
 	return MatchError(fail(id, nil))
 }

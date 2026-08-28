@@ -1,4 +1,5 @@
-//+build xmpp
+//go:build xmpp
+// +build xmpp
 
 package router
 

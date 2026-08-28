@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/containrrr/shoutrrr/internal/testutils"
-	"github.com/containrrr/shoutrrr/pkg/types"
 	"github.com/jarcoal/httpmock"
+	"github.com/marrrrrrrrry/shoutrrr/internal/testutils"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )

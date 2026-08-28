@@ -1,4 +1,4 @@
-FROM alpine:3.23.4 as alpine
+FROM alpine:3.23.4 AS alpine
 
 RUN apk add --no-cache ca-certificates
 
@@ -7,6 +7,6 @@ FROM scratch
 COPY --from=alpine \
     /etc/ssl/certs/ca-certificates.crt \
     /etc/ssl/certs/ca-certificates.crt
-COPY shoutrrr/shoutrrr /
+COPY shoutrrr /
 
 ENTRYPOINT ["/shoutrrr"]

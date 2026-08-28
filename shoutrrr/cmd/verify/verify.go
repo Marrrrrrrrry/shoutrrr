@@ -2,10 +2,10 @@ package verify
 
 import (
 	"fmt"
-	"github.com/containrrr/shoutrrr/internal/util"
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/router"
 	"github.com/fatih/color"
+	"github.com/marrrrrrrrry/shoutrrr/internal/util"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/router"
 	"os"
 
 	"github.com/spf13/cobra"

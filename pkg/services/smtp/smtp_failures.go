@@ -1,6 +1,6 @@
 package smtp
 
-import "github.com/containrrr/shoutrrr/internal/failures"
+import "github.com/marrrrrrrrry/shoutrrr/internal/failures"
 
 const (
 	// FailUnknown is the default FailureID

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/containrrr/shoutrrr/pkg/types"
-	"github.com/containrrr/shoutrrr/pkg/util"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/util"
 )
 
 type client struct {

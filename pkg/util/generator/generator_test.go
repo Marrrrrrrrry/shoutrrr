@@ -2,11 +2,12 @@ package generator_test
 
 import (
 	"fmt"
+	"io"
 	re "regexp"
 	"strings"
 	"testing"
 
-	"github.com/containrrr/shoutrrr/pkg/util/generator"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/util/generator"
 	"github.com/mattn/go-colorable"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -20,11 +21,17 @@ func TestGenerator(t *testing.T) {
 
 var (
 	client  *generator.UserDialog
-	userOut *gbytes.Buffer
-	userIn  *gbytes.Buffer
+	userOut *io.PipeWriter // typed input, consumed by the dialog; writes block until read
+	typed   strings.Builder
+	userIn  *gbytes.Buffer // dialog output (prompts and replies)
 )
 
+// mockTyped simulates keyboard input. Writing to the pipe blocks until the
+// dialog's scanner consumes the data, which synchronizes the test with the
+// dialog goroutine and avoids read-EOF races.
 func mockTyped(a ...interface{}) {
+	_, _ = fmt.Fprint(&typed, a...)
+	_, _ = fmt.Fprint(&typed, "\n")
 	_, _ = fmt.Fprint(userOut, a...)
 	_, _ = fmt.Fprint(userOut, "\n")
 }
@@ -33,17 +40,19 @@ func dumpBuffers() {
 	for _, line := range strings.Split(string(userIn.Contents()), "\n") {
 		println(">", line)
 	}
-	for _, line := range strings.Split(string(userOut.Contents()), "\n") {
+	for _, line := range strings.Split(typed.String(), "\n") {
 		println("<", line)
 	}
 }
 
 var _ = Describe("GeneratorCommon", func() {
 	BeforeEach(func() {
-		userOut = gbytes.NewBuffer()
+		typed.Reset()
+		reader, writer := io.Pipe()
+		userOut = writer
 		userIn = gbytes.NewBuffer()
 		userInMono := colorable.NewNonColorable(userIn)
-		client = generator.NewUserDialog(userOut, userInMono, map[string]string{"propKey": "propVal"})
+		client = generator.NewUserDialog(reader, userInMono, map[string]string{"propKey": "propVal"})
 	})
 
 	It("reprompt upon invalid answers", func() {
@@ -53,14 +62,13 @@ var _ = Describe("GeneratorCommon", func() {
 			answer <- client.QueryString("name:", generator.Required, "")
 		}()
 
+		Eventually(userIn, "5s").Should(gbytes.Say(`name: `))
 		mockTyped("")
+		Eventually(userIn, "5s").Should(gbytes.Say(`field is required`))
+		Eventually(userIn, "5s").Should(gbytes.Say(`name: `))
 		mockTyped("Normal Human Name")
 
-		Eventually(userIn).Should(gbytes.Say(`name: `))
-
-		Eventually(userIn).Should(gbytes.Say(`field is required`))
-		Eventually(userIn).Should(gbytes.Say(`name: `))
-		Eventually(answer).Should(Receive(Equal("Normal Human Name")))
+		Eventually(answer, "5s").Should(Receive(Equal("Normal Human Name")))
 	})
 
 	It("should accept any input when validator is nil", func() {
@@ -69,8 +77,11 @@ var _ = Describe("GeneratorCommon", func() {
 		go func() {
 			answer <- client.QueryString("name:", nil, "")
 		}()
+
+		Eventually(userIn, "5s").Should(gbytes.Say(`name: `))
 		mockTyped("")
-		Eventually(answer).Should(Receive(BeEmpty()))
+
+		Eventually(answer, "5s").Should(Receive(BeEmpty()))
 	})
 
 	It("should use predefined prop value if key is present", func() {
@@ -79,7 +90,7 @@ var _ = Describe("GeneratorCommon", func() {
 		go func() {
 			answer <- client.QueryString("name:", generator.Required, "propKey")
 		}()
-		Eventually(answer).Should(Receive(Equal("propVal")))
+		Eventually(answer, "5s").Should(Receive(Equal("propVal")))
 	})
 
 	Describe("Query", func() {
@@ -91,13 +102,13 @@ var _ = Describe("GeneratorCommon", func() {
 				answer <- client.Query(query, re.MustCompile("(foo|bar)"), "")
 			}()
 
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("")
+			Eventually(userIn, "5s").Should(gbytes.Say(`invalid format`))
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("foo")
 
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(userIn).Should(gbytes.Say(`invalid format`))
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(answer).Should(Receive(ContainElement("foo")))
+			Eventually(answer, "5s").Should(Receive(ContainElement("foo")))
 		})
 	})
 
@@ -110,11 +121,11 @@ var _ = Describe("GeneratorCommon", func() {
 				answer <- client.QueryAll(query, re.MustCompile(`foo(ba[rz])`), "", -1)
 			}()
 
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("foobar foobaz")
 
-			Eventually(userIn).Should(gbytes.Say(query))
 			var matches [][]string
-			Eventually(answer).Should(Receive(&matches))
+			Eventually(answer, "5s").Should(Receive(&matches))
 			Expect(matches).To(ContainElement([]string{"foobar", "bar"}))
 			Expect(matches).To(ContainElement([]string{"foobaz", "baz"}))
 		})
@@ -129,13 +140,13 @@ var _ = Describe("GeneratorCommon", func() {
 				answer <- client.QueryStringPattern(query, re.MustCompile(".*bar"), "")
 			}()
 
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("foo")
+			Eventually(userIn, "5s").Should(gbytes.Say(`invalid format`))
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("foobar")
 
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(userIn).Should(gbytes.Say(`invalid format`))
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(answer).Should(Receive(Equal("foobar")))
+			Eventually(answer, "5s").Should(Receive(Equal("foobar")))
 		})
 	})
 
@@ -148,13 +159,13 @@ var _ = Describe("GeneratorCommon", func() {
 				answer <- client.QueryInt(query, "", 64)
 			}()
 
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("x")
+			Eventually(userIn, "5s").Should(gbytes.Say(`not a number`))
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("0x20")
 
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(userIn).Should(gbytes.Say(`not a number`))
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(answer).Should(Receive(Equal(int64(32))))
+			Eventually(answer, "5s").Should(Receive(Equal(int64(32))))
 		})
 	})
 
@@ -167,13 +178,13 @@ var _ = Describe("GeneratorCommon", func() {
 				answer <- client.QueryBool(query, "")
 			}()
 
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("maybe")
+			Eventually(userIn, "5s").Should(gbytes.Say(`answer using yes or no`))
+			Eventually(userIn, "5s").Should(gbytes.Say(query))
 			mockTyped("y")
 
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(userIn).Should(gbytes.Say(`answer using yes or no`))
-			Eventually(userIn).Should(gbytes.Say(query))
-			Eventually(answer).Should(Receive(BeTrue()))
+			Eventually(answer, "5s").Should(Receive(BeTrue()))
 		})
 	})
 })

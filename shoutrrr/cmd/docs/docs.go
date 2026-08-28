@@ -5,11 +5,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/containrrr/shoutrrr/pkg/router"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/router"
 	"github.com/spf13/cobra"
 
-	f "github.com/containrrr/shoutrrr/pkg/format"
-	cli "github.com/containrrr/shoutrrr/shoutrrr/cmd"
+	f "github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	cli "github.com/marrrrrrrrry/shoutrrr/shoutrrr/cmd"
 )
 
 var (

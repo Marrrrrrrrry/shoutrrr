@@ -24,5 +24,3 @@ func (a *oauth2Auth) Start(_ *smtp.ServerInfo) (string, []byte, error) {
 func (a *oauth2Auth) Next(_ []byte, _ bool) ([]byte, error) {
 	return nil, nil
 }
-
-

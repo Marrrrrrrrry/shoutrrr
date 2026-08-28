@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net/url"
 
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 )
 
 // Config for use within the Google Chat plugin.

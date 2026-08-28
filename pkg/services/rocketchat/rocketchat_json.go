@@ -3,12 +3,12 @@ package rocketchat
 import (
 	"encoding/json"
 
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 )
 
 // JSON used within the Rocket.chat service
 type JSON struct {
-	Text    string `json:"text"`
+	Text     string `json:"text"`
 	UserName string `json:"username,omitempty"`
 	Channel  string `json:"channel,omitempty"`
 }
@@ -31,4 +31,3 @@ func CreateJSONPayload(config *Config, message string, params *types.Params) ([]
 	}
 	return json.Marshal(payload)
 }
-

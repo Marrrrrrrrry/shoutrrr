@@ -3,21 +3,21 @@ package slack
 import (
 	"net/url"
 
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 )
 
 // Config for the slack service
 type Config struct {
 	standard.EnumlessConfig
-	BotName string `optional:"uses bot default" key:"botname,username" desc:"Bot name"`
-	Icon    string `key:"icon,icon_emoji,icon_url" default:"" optional:"" desc:"Use emoji or URL as icon (based on presence of http(s):// prefix)"`
-	Token   Token  `desc:"API Bot token" url:"user,pass"`
-	Color   string `key:"color" optional:"default border color" desc:"Message left-hand border color"`
-	Title   string `key:"title" optional:"omitted" desc:"Prepended text above the message"`
-	Channel string `url:"host" desc:"Channel to send messages to in Cxxxxxxxxxx format"`
-	ThreadTS string   `key:"thread_ts" optional:"" desc:"ts value of the parent message (to send message as reply in thread)"`
+	BotName  string `optional:"uses bot default" key:"botname,username" desc:"Bot name"`
+	Icon     string `key:"icon,icon_emoji,icon_url" default:"" optional:"" desc:"Use emoji or URL as icon (based on presence of http(s):// prefix)"`
+	Token    Token  `desc:"API Bot token" url:"user,pass"`
+	Color    string `key:"color" optional:"default border color" desc:"Message left-hand border color"`
+	Title    string `key:"title" optional:"omitted" desc:"Prepended text above the message"`
+	Channel  string `url:"host" desc:"Channel to send messages to in Cxxxxxxxxxx format"`
+	ThreadTS string `key:"thread_ts" optional:"" desc:"ts value of the parent message (to send message as reply in thread)"`
 }
 
 // GetURL returns a URL representation of it's current field values

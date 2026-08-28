@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/containrrr/shoutrrr/pkg/types"
-	"github.com/containrrr/shoutrrr/pkg/util"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/util"
 )
 
 // WebhookPayload is the webhook endpoint payload

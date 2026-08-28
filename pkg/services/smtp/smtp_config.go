@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/types"
-	"github.com/containrrr/shoutrrr/pkg/util"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/util"
 )
 
 // Config is the configuration needed to send e-mail notifications over SMTP

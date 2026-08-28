@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 
 	Ω "github.com/onsi/gomega"
 )

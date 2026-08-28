@@ -3,12 +3,12 @@ package pushbullet
 import (
 	"errors"
 	"fmt"
-	"github.com/containrrr/shoutrrr/pkg/format"
-	"github.com/containrrr/shoutrrr/pkg/types"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/format"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/types"
 	"net/url"
 	"strings"
 
-	"github.com/containrrr/shoutrrr/pkg/services/standard"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/services/standard"
 )
 
 // Config ...
