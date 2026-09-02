@@ -67,3 +67,22 @@ jobs:
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  race:
+    name: Race detector
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: stable
+
+      - name: Test with race detector
+        # Runs once (not per matrix entry): the race detector instruments the
+        # test binary, not the product, so a single latest-Go run is enough.
+        # CGO must stay enabled: -race requires the TSan runtime.
+        run: go test -race ./...

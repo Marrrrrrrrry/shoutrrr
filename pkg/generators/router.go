@@ -3,7 +3,7 @@ package generators
 import (
 	"fmt"
 	"github.com/marrrrrrrrry/shoutrrr/pkg/generators/basic"
-	"github.com/marrrrrrrrry/shoutrrr/pkg/generators/xouath2"
+	"github.com/marrrrrrrrry/shoutrrr/pkg/generators/xoauth2"
 	"github.com/marrrrrrrrry/shoutrrr/pkg/services/telegram"
 	t "github.com/marrrrrrrrry/shoutrrr/pkg/types"
 	"strings"
@@ -11,7 +11,7 @@ import (
 
 var generatorMap = map[string]func() t.Generator{
 	"basic":    func() t.Generator { return &basic.Generator{} },
-	"oauth2":   func() t.Generator { return &xouath2.Generator{} },
+	"oauth2":   func() t.Generator { return &xoauth2.Generator{} },
 	"telegram": func() t.Generator { return &telegram.Generator{} },
 }
 

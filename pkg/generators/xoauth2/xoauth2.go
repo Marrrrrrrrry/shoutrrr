@@ -1,4 +1,4 @@
-package xouath2
+package xoauth2
 
 import (
 	"encoding/json"
