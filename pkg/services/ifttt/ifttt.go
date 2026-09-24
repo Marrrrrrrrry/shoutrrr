@@ -73,6 +73,7 @@ func doSend(payload []byte, postURL string) error {
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
 	if res.StatusCode > 299 || res.StatusCode < 200 {
 		return fmt.Errorf("got response status code %s", res.Status)
 	}

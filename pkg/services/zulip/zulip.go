@@ -70,6 +70,10 @@ func (service *Service) doSend(config *Config, message string) error {
 	payload := CreatePayload(config, message)
 	res, err := http.Post(apiURL, "application/x-www-form-urlencoded", strings.NewReader(payload.Encode()))
 
+	if err == nil {
+		defer res.Body.Close()
+	}
+
 	if err == nil && res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("response status code %s", res.Status)
 	}

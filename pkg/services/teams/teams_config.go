@@ -22,6 +22,9 @@ type Config struct {
 	Title string `key:"title" optional:""`
 	Color string `key:"color" optional:""`
 	Host  string `key:"host" optional:"" default:"outlook.office.com"`
+	// WebhookURL is a full webhook URL, used for Workflows-based webhooks that
+	// cannot be decomposed into the legacy connector URL parts
+	WebhookURL string `key:"webhook" optional:"" desc:"Full webhook URL, e.g. a Teams Workflows request URL"`
 }
 
 func (config *Config) webhookParts() [4]string {
@@ -46,7 +49,18 @@ func ConfigFromWebhookURL(webhookURL url.URL) (*Config, error) {
 	}
 
 	if err := config.SetFromWebhookURL(webhookURL.String()); err != nil {
-		return nil, err
+		if !isWorkflowsWebhookURL(&webhookURL) {
+			return nil, err
+		}
+		// Workflows request URLs cannot be decomposed into connector parts,
+		// so the full URL is kept as-is (query parameters included)
+		upstream := webhookURL
+		upstream.Scheme = strings.TrimPrefix(webhookURL.Scheme, Scheme+"+")
+		config = &Config{
+			// keep the default host so that the query omits it
+			Host:       LegacyHost,
+			WebhookURL: upstream.String(),
+		}
 	}
 
 	return config, nil
@@ -65,17 +79,42 @@ func (config *Config) SetURL(url *url.URL) error {
 }
 
 func (config *Config) getURL(resolver types.ConfigQueryResolver) *url.URL {
-	return &url.URL{
-		User:       url.User(config.Group),
-		Host:       config.Tenant,
-		Path:       "/" + config.AltID + "/" + config.GroupOwner,
+	serviceURL := &url.URL{
 		Scheme:     Scheme,
 		ForceQuery: false,
 		RawQuery:   format.BuildQuery(resolver),
 	}
+
+	// A full webhook URL cannot be expressed as connector URL parts;
+	// Path "/" keeps the canonical "teams:///?webhook=..." form
+	if config.WebhookURL != "" {
+		serviceURL.Path = "/"
+		return serviceURL
+	}
+
+	serviceURL.User = url.User(config.Group)
+	serviceURL.Host = config.Tenant
+	serviceURL.Path = "/" + config.AltID + "/" + config.GroupOwner
+	return serviceURL
 }
 
 func (config *Config) setURL(resolver types.ConfigQueryResolver, url *url.URL) error {
+	// A full webhook URL cannot coexist with the legacy connector URL parts,
+	// so when present it takes precedence and part parsing is skipped
+	for key := range url.Query() {
+		if strings.EqualFold(key, "webhook") {
+			for key, vals := range url.Query() {
+				if err := resolver.Set(key, vals[0]); err != nil {
+					return err
+				}
+			}
+			if config.WebhookURL == "" {
+				return fmt.Errorf("webhook URL cannot be empty")
+			}
+			return nil
+		}
+	}
+
 	var webhookParts [4]string
 
 	if pass, legacyFormat := url.User.Password(); legacyFormat {
@@ -114,6 +153,24 @@ func (config *Config) setFromWebhookParts(parts [4]string) {
 	config.GroupOwner = parts[3]
 }
 
+// isWorkflowsWebhookURL checks whether the URL is a Power Automate Workflows
+// request URL, which replaced the retired Office 365 Connector webhooks
+func isWorkflowsWebhookURL(webhookURL *url.URL) bool {
+	host := webhookURL.Hostname()
+	return host == workflowsHost || strings.HasSuffix(host, "."+workflowsHost)
+}
+
+// hasConfigKey checks whether the resolver knows the given config key
+func hasConfigKey(resolver types.ConfigQueryResolver, key string) bool {
+	for _, known := range resolver.QueryFields() {
+		if strings.EqualFold(known, key) {
+			return true
+		}
+	}
+	return false
+}
+
+// buildWebhookURL assembles the legacy connector webhook URL from its parts
 func buildWebhookURL(host, group, tenant, altID, groupOwner string) string {
 	// config.Group, config.Tenant, config.AltID, config.GroupOwner
 	path := Path
@@ -157,4 +214,7 @@ const (
 	Path = "webhookb2"
 	// ProviderName is the name of the Teams integration provider
 	ProviderName = "IncomingWebhook"
+	// workflowsHost is the host of Power Automate Workflows request URLs,
+	// which replaced the retired Office 365 Connector webhooks
+	workflowsHost = "logic.azure.com"
 )

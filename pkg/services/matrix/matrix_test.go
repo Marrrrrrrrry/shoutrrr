@@ -132,7 +132,7 @@ var _ = Describe("the matrix service", func() {
 
 					err = service.Send("Test message", nil)
 					Expect(err).NotTo(HaveOccurred())
-					Expect(httpmock.GetCallCountInfo()["POST https://mockserver/_matrix/client/r0/join/%21room:mockserver?access_token=TOKEN"]).To(Equal(0))
+					Expect(httpmock.GetCallCountInfo()["POST https://mockserver/_matrix/client/v3/join/%21room:mockserver?access_token=TOKEN"]).To(Equal(0))
 				})
 			})
 			When("sending to one room fails", func() {

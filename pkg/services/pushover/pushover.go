@@ -63,6 +63,7 @@ func (service *Service) sendToDevice(device string, message string, config *Conf
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("failed to send notification to pushover device %q, response status %q", device, res.Status)

@@ -139,14 +139,14 @@ func CreateAPIURLFromConfig(config *Config) string {
 
 func doSend(payload []byte, postURL string) error {
 	res, err := http.Post(postURL, "application/json", bytes.NewBuffer(payload))
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
 
-	if res == nil && err == nil {
-		err = fmt.Errorf("unknown error")
+	if res.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("response status code %s", res.Status)
 	}
 
-	if err == nil && res.StatusCode != http.StatusNoContent {
-		err = fmt.Errorf("response status code %s", res.Status)
-	}
-
-	return err
+	return nil
 }

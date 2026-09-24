@@ -52,7 +52,14 @@ func (*Service) GetConfigURLFromCustom(customURL *url.URL) (serviceURL *url.URL,
 	}
 
 	resolver := format.NewPropKeyResolver(config)
+	// Workflows request URLs carry SAS query parameters (sp/sv/sig/api-version)
+	// that are not service config keys; they stay embedded in WebhookURL.
+	// Legacy connector custom URLs keep erroring on unknown keys.
+	workflows := isWorkflowsWebhookURL(customURL)
 	for key, vals := range customURL.Query() {
+		if workflows && !hasConfigKey(&resolver, key) {
+			continue
+		}
 		if err := resolver.Set(key, vals[0]); err != nil {
 			return nil, err
 		}
@@ -92,24 +99,30 @@ func (service *Service) doSend(config *Config, message string) error {
 		return err
 	}
 
-	host := config.Host
-	if host == "" {
-		host = LegacyHost
-		// Emit a warning to the log for now.
-		// TODO(v0.6): Remove legacy support as it should be fully deprecated now
-		service.Logf(`Warning: No host specified, update your Teams URL: %s`, util.DocsURL(`services/teams`))
+	postURL := config.WebhookURL
+	if postURL == "" {
+		host := config.Host
+		if host == "" {
+			host = LegacyHost
+			// Emit a warning to the log for now.
+			// TODO(v0.6): Remove legacy support as it should be fully deprecated now
+			service.Logf(`Warning: No host specified, update your Teams URL: %s`, util.DocsURL(`services/teams`))
+		}
+		postURL = buildWebhookURL(host, config.Group, config.Tenant, config.AltID, config.GroupOwner)
 	}
-	postURL := buildWebhookURL(host, config.Group, config.Tenant, config.AltID, config.GroupOwner)
 
 	res, err := http.Post(postURL, "application/json", bytes.NewBuffer(payload))
-	if err == nil && res.StatusCode != http.StatusOK {
-		return fmt.Errorf("failed to send notification to teams, response status code %s", res.Status)
-	}
 	if err != nil {
 		return fmt.Errorf(
 			"an error occurred while sending notification to teams: %s",
 			err.Error(),
 		)
+	}
+	defer res.Body.Close()
+	// Workflows request URLs respond with 202 Accepted (no Response action
+	// defined in the flow), so any 2xx status means the message was accepted
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return fmt.Errorf("failed to send notification to teams, response status code %s", res.Status)
 	}
 	return nil
 }

@@ -76,6 +76,7 @@ func (service *Service) sendToDevices(devices string, message string, title stri
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("failed to send notification to join devices %q, response status %q", devices, res.Status)

@@ -164,7 +164,7 @@ func conduitRegister(t *testing.T, baseURL string, user string, password string)
 	}
 
 	response := conduitRegisterResponse{}
-	doMatrixJSON(t, http.MethodPost, baseURL+"/_matrix/client/r0/register?kind=user", "", request, &response)
+	doMatrixJSON(t, http.MethodPost, baseURL+"/_matrix/client/v3/register?kind=user", "", request, &response)
 	if response.AccessToken == "" {
 		t.Fatalf("Conduit registration did not return an access token: %+v", response)
 	}
@@ -182,7 +182,7 @@ func conduitCreateRoom(t *testing.T, baseURL string, accessToken string) string 
 	response := struct {
 		RoomID string `json:"room_id"`
 	}{}
-	doMatrixJSON(t, http.MethodPost, baseURL+"/_matrix/client/r0/createRoom", accessToken, request, &response)
+	doMatrixJSON(t, http.MethodPost, baseURL+"/_matrix/client/v3/createRoom", accessToken, request, &response)
 	if response.RoomID == "" {
 		t.Fatalf("Conduit createRoom did not return a room ID: %+v", response)
 	}
@@ -199,7 +199,7 @@ func conduitDevices(t *testing.T, baseURL string, accessToken string) conduitDev
 	t.Helper()
 
 	response := conduitDevicesResponse{}
-	doMatrixJSON(t, http.MethodGet, baseURL+"/_matrix/client/r0/devices", accessToken, nil, &response)
+	doMatrixJSON(t, http.MethodGet, baseURL+"/_matrix/client/v3/devices", accessToken, nil, &response)
 	return response
 }
 
