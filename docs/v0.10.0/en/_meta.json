@@ -1,0 +1,8 @@
+[
+  "getting-started",
+  { "type": "dir-section-header", "name": "services", "label": "Services" },
+  { "type": "dir-section-header", "name": "guides", "label": "Guides" },
+  { "type": "dir-section-header", "name": "examples", "label": "Examples" },
+  { "type": "dir-section-header", "name": "generators", "label": "Generators" },
+  { "type": "file", "name": "proxy", "label": "Advanced usage" }
+]

@@ -26,3 +26,7 @@ coverage.txt
 dist
 site
 docs/services/*/config.md
+node_modules/
+doc_build/
+*.log
+.DS_Store

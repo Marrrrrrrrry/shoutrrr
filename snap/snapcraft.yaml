@@ -8,7 +8,7 @@ grade: stable
 confinement: strict 
 contact: https://github.com/marrrrrrrrry/shoutrrr/discussions
 issues: https://github.com/marrrrrrrrry/shoutrrr/issues
-icon: docs/shoutrrr-logotype.png
+icon: docs/public/shoutrrr-logotype.png
 license: MIT
 source-code: https://github.com/marrrrrrrrry/shoutrrr
 type: app

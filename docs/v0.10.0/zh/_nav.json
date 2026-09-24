@@ -1,0 +1,6 @@
+[
+  { "text": "快速开始", "link": "/getting-started", "activeMatch": "^/getting-started" },
+  { "text": "通知服务", "link": "/services/overview", "activeMatch": "^/services/" },
+  { "text": "指南", "link": "/guides/slack/", "activeMatch": "^/guides/" },
+  { "text": "高级用法", "link": "/proxy", "activeMatch": "^/proxy" }
+]

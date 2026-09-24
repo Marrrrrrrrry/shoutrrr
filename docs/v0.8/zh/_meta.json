@@ -1,0 +1,8 @@
+[
+  "getting-started",
+  { "type": "dir-section-header", "name": "services", "label": "通知服务" },
+  { "type": "dir-section-header", "name": "guides", "label": "指南" },
+  { "type": "dir-section-header", "name": "examples", "label": "示例" },
+  { "type": "dir-section-header", "name": "generators", "label": "生成器" },
+  { "type": "file", "name": "proxy", "label": "高级用法" }
+]

@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://github.com/marrrrrrrrry/shoutrrr">
-    <img src="https://raw.githubusercontent.com/marrrrrrrrry/shoutrrr/main/docs/shoutrrr-logotype.png" width="450" />
+    <img src="https://raw.githubusercontent.com/marrrrrrrrry/shoutrrr/main/docs/public/shoutrrr-logotype.png" width="450" />
 </a>
 
 # Shoutrrr

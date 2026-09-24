@@ -1,0 +1,6 @@
+[
+  { "text": "Getting Started", "link": "/getting-started", "activeMatch": "^/getting-started" },
+  { "text": "Services", "link": "/services/overview", "activeMatch": "^/services/" },
+  { "text": "Guides", "link": "/guides/slack/", "activeMatch": "^/guides/" },
+  { "text": "Advanced", "link": "/proxy", "activeMatch": "^/proxy" }
+]

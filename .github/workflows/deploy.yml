@@ -1,0 +1,78 @@
+name: Deploy Docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'rspress.config.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'styles/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 排队执行而不取消在途运行：Pages 部署按顺序执行，取消可能漏发或发半成品
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # pnpm 版本取自 package.json 的 packageManager 字段，与 pnpm-lock.yaml 保持一致
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs
+        env:
+          # 项目站点子路径：https://<owner>.github.io/shoutrrr-docs/
+          # 若部署到用户主域或自定义域名的根路径，改为 RSPRESS_BASE: /
+          # 注意：构建缓存键不含环境变量值，本地切换 RSPRESS_BASE 后需先
+          # 删除 .rspress/ 与 node_modules/.cache/ 再构建（CI 全新检出无此问题）
+          RSPRESS_BASE: /shoutrrr/
+        run: pnpm build
+
+      # GitHub Pages 不做 /foo -> /foo.html 重写，扩展名路由由 rspress
+      # 生成的 404.html（完整 SPA）兜底；.nojekyll 跳过 Jekyll 处理
+      - name: Disable Jekyll
+        run: touch doc_build/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: doc_build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
