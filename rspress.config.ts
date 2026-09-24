@@ -2,6 +2,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from '@rspress/core';
 
+// 部署子路径：CI 里设 RSPRESS_BASE=/shoutrrr/（GitHub Pages 项目站点），
+// 本地开发与根路径部署不设置该环境变量即为 '/'
+const base = process.env.RSPRESS_BASE ?? '/';
+
 export default defineConfig({
   root: 'docs',
   lang: 'en',
@@ -15,9 +19,7 @@ export default defineConfig({
   route: {
     localeRedirect: 'auto',
   },
-  // 部署子路径：CI 里设 RSPRESS_BASE=/shoutrrr-docs/（GitHub Pages 项目站点），
-  // 本地开发与根路径部署不设置该环境变量即为 '/'
-  base: process.env.RSPRESS_BASE ?? '/',
+  base,
   locales: [
     {
       lang: 'en',
@@ -33,7 +35,8 @@ export default defineConfig({
     },
   ],
   globalStyles: path.join(path.dirname(fileURLToPath(import.meta.url)), 'styles/index.css'),
-  logo: '/shoutrrr-180px.png',
+  // 注意：rspress 会给 icon 自动拼 base，但 logo 是直通渲染的，必须手动拼
+  logo: `${base}shoutrrr-180px.png`,
   logoText: 'Shoutrrr',
   icon: '/favicon.ico',
   themeConfig: {

@@ -6,7 +6,7 @@ hero:
   text: gopher 的通知库
   tagline: 一套 URL 格式打通 20 多种通知服务——Slack、Discord、Telegram、Pushover、邮件等。设计灵感来自 caronc/apprise。
   image:
-    src: /shoutrrr-logotype.png
+    src: /shoutrrr/shoutrrr-logotype.png
     alt: Shoutrrr
   actions:
     - theme: brand

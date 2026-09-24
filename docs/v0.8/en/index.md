@@ -6,7 +6,7 @@ hero:
   text: Notification library for gophers
   tagline: A single URL schema for 20+ notification services — Slack, Discord, Telegram, Pushover, Email and more. Heavily inspired by caronc/apprise.
   image:
-    src: /shoutrrr-logotype.png
+    src: /shoutrrr/shoutrrr-logotype.png
     alt: Shoutrrr
   actions:
     - theme: brand
